@@ -24,7 +24,8 @@ body {
 .clearButton, .operators {
     flex-grow: 1;
 }
-.zero {
+.zero, .clearButton, .divide {
+    width: 290px;
     flex-grow: 2;
 }
 button {

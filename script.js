@@ -14,10 +14,8 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b === 0) {
-      //  console.log('true');
         return 'ERROR';
     }
-    //console.log
     return a / b;
 }
 
@@ -52,13 +50,15 @@ const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
 const equalButton = document.querySelector('.equal');
 const clearButton = document.querySelector('.clearButton');
+const decimalButton = document.querySelector('.decimal');
+
 
 
 // add event listeners to number buttons to display entered numbers on the diplay
 numberButtons.forEach(numberButton => numberButton.addEventListener('click', () => {
     if (operator){
 // reset display if one number has already been inputted
-        display.textContent = '';
+        if (!(secondNumber)) display.textContent = '';
         secondNumber  += numberButton.textContent;
     } else {
         firstNumber += numberButton.textContent;
@@ -75,13 +75,13 @@ operatorButtons.forEach(operatorButton => operatorButton.addEventListener('click
         firstNumber = operate(Number(firstNumber), Number(secondNumber), operator);
 // reset second number everytime an operation is performed
         secondNumber = '';
-
-        
+        decimalButton.classList.remove('disable');
         printValue(`${firstNumber}`);
         operator = operatorButton.textContent;
     }
     else {
         operator = operatorButton.textContent;
+        decimalButton.classList.remove('disable');
     }
 }));
 
@@ -93,6 +93,7 @@ equalButton.addEventListener('click', () => {
         firstNumber = operate(firstNumber, secondNumber, operator);
         secondNumber = '';
         printValue(`${firstNumber}`);
+        decimalButton.classList.remove('disable');
     }
 });
 
@@ -102,6 +103,7 @@ clearButton.addEventListener('click', () => {
     firstNumber = '';
     secondNumber = '';
     operator = '';
+    decimalButton.classList.remove('disable');
 })
 
 // print value to display after considering the number of digits and decimal places in the value
@@ -114,3 +116,18 @@ function printValue(value) {
         display.textContent = value;
     }
 }
+
+// add decimal point utitlity
+
+decimalButton.addEventListener('click', () => {
+    if (!(decimalButton.classList.contains('disable'))) {
+        if (secondNumber) {
+            secondNumber += decimalButton.textContent;
+        } else {
+            firstNumber += decimalButton.textContent;
+        }
+        display.textContent += decimalButton.textContent;
+        decimalButton.classList.add('disable');
+    }
+})
+
