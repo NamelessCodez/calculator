@@ -18,9 +18,6 @@ function divide(a, b) {
     }
     return a / b;
 }
-
-
-
 // pass the numbers into correct operator functions 
 
 function operate(a, b, operator) {
@@ -28,7 +25,7 @@ function operate(a, b, operator) {
         return 'ERROR';
     }
     
-
+// here the input will be strings, so they need to be converted before operations
     if (operator == '+') {
         return add(Number(a), Number(b));
     } else if (operator == '-') {
@@ -40,6 +37,58 @@ function operate(a, b, operator) {
     }
     
 }
+
+function clickNumber() {
+    {
+        if (operator) {
+    // reset display if one number has already been inputted
+            if (!(secondNumber)) display.textContent = '';
+            secondNumber  += this.textContent;
+        } else {
+            firstNumber += this.textContent;
+        }
+    
+        display.textContent += this.textContent;
+    }
+}
+
+function clickOperator() {
+    if (!(operator && firstNumber && secondNumber)) {
+        decimalButton.classList.remove('disable');
+    }
+    else {
+        performPreviousOperation();
+    }
+    operator = this.textContent;
+}
+
+function performEntireOperation() {
+    if (firstNumber && secondNumber && operator) {
+        firstNumber = operate(firstNumber, secondNumber, operator);
+        secondNumber = '';
+        printValue(`${firstNumber}`);
+        decimalButton.classList.remove('disable');
+    }
+}
+
+function performPreviousOperation() {
+    firstNumber = operate(Number(firstNumber), Number(secondNumber), operator);
+    // reset second number everytime an operation is performed
+    secondNumber = '';
+    decimalButton.classList.remove('disable');
+    printValue(`${firstNumber}`);
+    operator = this.textContent;
+}
+
+function clear() {
+    display.textContent = '';
+    firstNumber = '';
+    secondNumber = '';
+    operator = '';
+    decimalButton.classList.remove('disable');
+}
+
+
 const DISPLAY_LIMIT = 11;
 let firstNumber = '';
 let secondNumber = '';
@@ -55,56 +104,20 @@ const decimalButton = document.querySelector('.decimal');
 
 
 // add event listeners to number buttons to display entered numbers on the diplay
-numberButtons.forEach(numberButton => numberButton.addEventListener('click', () => {
-    if (operator){
-// reset display if one number has already been inputted
-        if (!(secondNumber)) display.textContent = '';
-        secondNumber  += numberButton.textContent;
-    } else {
-        firstNumber += numberButton.textContent;
-    }
-
-    display.textContent += numberButton.textContent;
-}));
+numberButtons.forEach(numberButton => numberButton.addEventListener('click', clickNumber));
 
 // add event listeners to operator buttons, if operator, and numbers already exist perform the operation
 // and set the new value of operator, else just set the value
 // this is because only one operation is allowed at a time
-operatorButtons.forEach(operatorButton => operatorButton.addEventListener('click', () => {
-    if (operator && firstNumber && secondNumber) {
-        firstNumber = operate(Number(firstNumber), Number(secondNumber), operator);
-// reset second number everytime an operation is performed
-        secondNumber = '';
-        decimalButton.classList.remove('disable');
-        printValue(`${firstNumber}`);
-        operator = operatorButton.textContent;
-    }
-    else {
-        operator = operatorButton.textContent;
-        decimalButton.classList.remove('disable');
-    }
-}));
+operatorButtons.forEach(operatorButton => operatorButton.addEventListener('click', clickOperator));
 
 
 // perform the operation when equal button pressed
 
-equalButton.addEventListener('click', () => {
-    if (firstNumber && secondNumber && operator) {
-        firstNumber = operate(firstNumber, secondNumber, operator);
-        secondNumber = '';
-        printValue(`${firstNumber}`);
-        decimalButton.classList.remove('disable');
-    }
-});
+equalButton.addEventListener('click', performEntireOperation);
 
 // clear the variables and the display when clear button is pressed
-clearButton.addEventListener('click', () => {
-    display.textContent = '';
-    firstNumber = '';
-    secondNumber = '';
-    operator = '';
-    decimalButton.classList.remove('disable');
-})
+clearButton.addEventListener('click', clear)
 
 // print value to display after considering the number of digits and decimal places in the value
 
@@ -130,4 +143,3 @@ decimalButton.addEventListener('click', () => {
         decimalButton.classList.add('disable');
     }
 })
-
